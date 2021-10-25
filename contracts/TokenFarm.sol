@@ -37,7 +37,7 @@ contract TokenFarm is Ownable {
         }
     }
 
-    function getUserTotalValue(recipient) public view returns (uint256) {
+    function getUserTotalValue(address _user) public view returns (uint256) {
         uint256 totalValue = 0;
         require(uniqueTokensStaked[_user] > 0, "User has no staked tokens!");
         for (uint256 i = 0; i < allowedTokenList.length; i++) {
@@ -63,7 +63,7 @@ contract TokenFarm is Ownable {
         view
         returns (uint256, uint256)
     {
-        address priceFeedAddress = tokenPriceFeedMapping[_mapping];
+        address priceFeedAddress = tokenPriceFeedMapping[_token];
         AggregatorV3Interface priceFeed = AggregatorV3Interface(
             priceFeedAddress
         );
@@ -84,6 +84,16 @@ contract TokenFarm is Ownable {
         if (uniqueTokensStaked[msg.sender] == 1) {
             stakers.push(msg.sender);
         }
+    }
+
+    function unstakeTokens(address _token) public {
+        uint256 balance = stakingBalance[_token][msg.sender];
+        require(balance > 0, "Staking balance cannot be 0");
+        IERC20(_token).transfer(msg.sender, balance);
+        stakingBalance[_token][msg.sender] = 0;
+        uniqueTokensStaked[msg.sender] -= 1;
+        // todo: check if user has no other staked tokens, then they need to
+        // be removed from the list of stakers
     }
 
     function updateUniqueTokensStaked(address _user, address _token) internal {
