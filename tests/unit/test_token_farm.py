@@ -24,3 +24,28 @@ def test_set_price_feed_contract_fails_with_non_owner():
 
     with pytest.raises(exceptions.VirtualMachineError):
         farm.setPriceFeedContract(token.address, price_feed, {"from": non_owner})
+
+
+def test_allow_token():
+    if network.show_active() not in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
+        pytest.skip("Only for local tests")
+    account = get_account()
+    farm, token = deploy_token_and_token_farm()
+
+    farm.addAllowedToken(token.address)
+
+    assert farm.allowedTokenList(0) == token.address
+
+
+def test_stake_tokens(amount_staked):
+    if network.show_active() not in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
+        pytest.skip("Only for local tests")
+    account = get_account()
+    farm, token = deploy_token_and_token_farm()
+
+    token.approve(farm.address, amount_staked, {"from": account})
+    farm.addAllowedToken(token.address)
+
+    farm.stakeTokens(amount_staked, token.address, {"from": account})
+
+    assert farm.stakingBalance(token.address, account.address) == amount_staked
