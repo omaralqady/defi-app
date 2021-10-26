@@ -48,9 +48,13 @@ def get_contract(contract_name):
         brownie.network.contract.ProjectContract: The most recently deployed
         version of this contract
     """
+    print(f"Retrieving contract: {contract_name} - Network: {network.show_active()}")
     contract_type = contract_to_mock[contract_name]
     if network.show_active() in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
         if len(contract_type) <= 0:
+            print(
+                f"Deploying mocks because contract {contract_name} does not exist yet"
+            )
             deploy_mocks()
         contract = contract_type[-1]
     else:
