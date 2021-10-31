@@ -12,7 +12,7 @@ FORKED_LOCAL_ENVS = ["mainnet-fork", "mainnet-fork-dev"]
 LOCAL_BLOCKCHAIN_ENVIRONMENTS = ["development", "ganache-local"]
 
 DECIMALS = 8
-STARTING_PRICE = 200000000000
+INIT_PRICE_VALUE = 200000000000
 
 contract_to_mock = {
     "eth_usd_price_feed": MockV3Aggregator,
@@ -70,7 +70,7 @@ def deploy_mocks():
     print(f"The active network is: {network.show_active()}")
     print("Deploying mocks...")
     account = get_account()
-    MockV3Aggregator.deploy(DECIMALS, STARTING_PRICE, {"from": account})
+    MockV3Aggregator.deploy(DECIMALS, INIT_PRICE_VALUE, {"from": account})
     MockWETH.deploy({"from": account})
     MockFAU.deploy({"from": account})
     print("Mocks deployed")
