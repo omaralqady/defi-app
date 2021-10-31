@@ -64,5 +64,5 @@ def main():
     }
 
     farm, token = deploy_token_and_token_farm()
-    send_tokens_to_farm(token, farm.token_list)
+    send_tokens_to_farm(token, farm, token_list)
     add_allowed_tokens(farm, token_list, get_account())
