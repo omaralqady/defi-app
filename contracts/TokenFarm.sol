@@ -43,6 +43,7 @@ contract TokenFarm is Ownable {
         for (uint256 i = 0; i < allowedTokenList.length; i++) {
             totalValue += getUserSingleTokenValue(_user, allowedTokenList[i]);
         }
+        return totalValue;
     }
 
     function getUserSingleTokenValue(address _user, address _token)
@@ -98,7 +99,7 @@ contract TokenFarm is Ownable {
 
     function updateUniqueTokensStaked(address _user, address _token) internal {
         if (stakingBalance[_token][_user] <= 0) {
-            uniqueTokensStaked[_user] = uniqueTokensStaked[_user] + 1;
+            uniqueTokensStaked[_user] += 1;
         }
     }
 
